@@ -1,15 +1,22 @@
 rm(list=ls(all=TRUE))
-setwd('/Users/zurich/Google Drive/FactMachine-SITE/FM-Site-STRUCTURE/10-CART/code/CART-TitanicPrediction')
+
+library(RCurl)
 #titanicData.csv has been previously saved.
 #titanic3.tab has been previously saved (for python)
 #titanicTitle.csv has been processed by python using titanic3.tab
-dfTitanic3 <- read.csv('titanicData.csv', header = TRUE, sep = ",")
+
+x <- getURL("https://raw.githubusercontent.com/thefactmachine/CART-TitanicPrediction/master/titanicData.csv")
+dfTitanic3 <- read.csv(text = x,  header = TRUE, sep = ",")
+
+
+z <- getURL("https://raw.githubusercontent.com/thefactmachine/CART-TitanicPrediction/master/titanicTitle.csv")
+title  <- read.csv(text = z,  header = TRUE, sep = ",")
 
 
 
-#export the titanic3 dataset, process in python and then import title file
 #title file is a list of titles for each person Mr, Miss, Sir...etc
-title <- read.csv('titanicTitle.csv', header = FALSE, sep = ",")
+
+#title <- read.csv('titanicTitle.csv', header = FALSE, sep = ",")
 
 names(title) <- c("id", "title")
 #merge the titles and main dataset together
@@ -39,7 +46,6 @@ mTitanic$fare[is.na(mTitanic$fare)] <- mean(mTitanic$fare, na.rm = TRUE)
 
 #turn survived into factor
 mTitanic$survived <- factor(mTitanic$survived)
-
 
 write.csv(mTitanic, file = "titanicProcessed.csv", row.names = FALSE)
 
